@@ -131,8 +131,8 @@ resource "azurerm_application_gateway" "appgw" {
   resource_group_name = azurerm_resource_group.rg-aniket.name
 
   sku {
-    name     = "WAF_v2"
-    tier     = "WAF_v2"
+    name     = "Standard_v2"
+    tier     = "Standard_v2"
     capacity = 2
   }
 
