@@ -97,15 +97,12 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     version   = "latest"
   }
     
-    admin_username = "azureuser"
 
+  # Correct place for the SSH key
   admin_ssh_key {
     username   = "azureuser"
     public_key = var.ssh_public_key
   }
-
-  
-
 
   os_disk {
     caching              = "ReadWrite"
