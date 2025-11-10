@@ -1,3 +1,26 @@
+# name: Terraform Deploy to Azure
+
+# on:
+#   push:
+#     branches:
+#       - main
+#   workflow_dispatch:
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
+
+#       - name: Azure Login
+#         uses: azure/login@v2
+#         with:
+
+#          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+
+#       - name: Verify login
+#         run: az account show
+
 name: Terraform Deploy to Azure
 
 on:
@@ -5,18 +28,40 @@ on:
     branches:
       - main
   workflow_dispatch:
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
     steps:
       - uses: actions/checkout@v4
 
       - name: Azure Login
         uses: azure/login@v2
         with:
-
-         creds: ${{ secrets.AZURE_CREDENTIALS }}
-
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Verify login
         run: az account show
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.7.6
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
