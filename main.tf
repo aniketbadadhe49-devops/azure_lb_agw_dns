@@ -96,10 +96,9 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     sku       = "18.04-LTS"
     version   = "latest"
   }
-    admin_ssh_key {
-    username   = "azureuser"
+    
     public_key = var.ssh_public_key
-  }
+  
 
 
   os_disk {
