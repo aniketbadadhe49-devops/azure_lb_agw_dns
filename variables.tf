@@ -18,3 +18,7 @@ variable "dns_record_name" {
   type        = string
   default     = "app"
 }
+variable "ssh_public_key" {
+  description = "SSH public key for VM access"
+  type        = string
+}
