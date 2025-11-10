@@ -97,7 +97,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     version   = "latest"
   }
     
-    public_key = var.ssh_public_key
+    public_key = file("~/.ssh/id_rsa.pub")
+
   
 
 
