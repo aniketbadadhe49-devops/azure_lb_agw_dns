@@ -16,7 +16,7 @@ provider "azurerm" {
 
 
 # 1️⃣ Resource Group
-resource "azurerm_resource_group" "rg" {
+resource "azurerm_resource_group" "rg-aniket" {
   name     = "${var.prefix}-rg"
   location = var.location
 }
