@@ -110,10 +110,6 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   }
 
   # Optional but recommended: SSH key authentication
-  admin_ssh_key {
-    username   = "azureuser"
-    public_key = file("~/.ssh/id_rsa.pub")
-  }
 
   network_interface {
     name    = "nic"
