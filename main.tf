@@ -13,6 +13,23 @@ provider "azurerm" {
   features {}
 }
 
+# Variables (replace with your own values or use a variables.tf file)
+variable "prefix" {
+  default = "myproject"
+}
+
+variable "location" {
+  default = "East US"
+}
+
+variable "dns_zone_name" {
+  default = "example.com"
+}
+
+variable "dns_record_name" {
+  default = "www"
+}
+
 # 1️⃣ Resource Group
 resource "azurerm_resource_group" "rg" {
   name     = "${var.prefix}-rg"
@@ -94,9 +111,16 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     sku       = "18.04-LTS"
     version   = "latest"
   }
-os_disk {
+
+  os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
+  }
+
+  # Optional but recommended: SSH key authentication
+  admin_ssh_key {
+    username   = "azureuser"
+    public_key = file("~/.ssh/id_rsa.pub")
   }
 
   network_interface {
@@ -164,6 +188,7 @@ resource "azurerm_application_gateway" "appgw" {
     http_listener_name         = "listener"
     backend_address_pool_name  = "backendPool"
     backend_http_settings_name = "httpSettings"
+    priority                   = 100   # ✅ Must define priority
   }
 }
 
