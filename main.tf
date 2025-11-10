@@ -94,6 +94,10 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     sku       = "18.04-LTS"
     version   = "latest"
   }
+os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
 
   network_interface {
     name    = "nic"
