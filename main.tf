@@ -13,22 +13,7 @@ provider "azurerm" {
   features {}
 }
 
-# Variables (replace with your own values or use a variables.tf file)
-variable "prefix" {
-  default = "myproject"
-}
 
-variable "location" {
-  default = "East US"
-}
-
-variable "dns_zone_name" {
-  default = "example.com"
-}
-
-variable "dns_record_name" {
-  default = "www"
-}
 
 # 1️⃣ Resource Group
 resource "azurerm_resource_group" "rg" {
