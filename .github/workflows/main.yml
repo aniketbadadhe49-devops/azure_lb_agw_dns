@@ -60,6 +60,12 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
+      - name: Create SSH key file
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+
+
       - name: Terraform Plan
         run: terraform plan -out=tfplan -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
 
