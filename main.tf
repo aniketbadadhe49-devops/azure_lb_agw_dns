@@ -25,20 +25,20 @@ resource "azurerm_resource_group" "rg-aniket" {
 resource "azurerm_virtual_network" "vnet" {
   name                = "${var.prefix}-vnet"
   address_space       = ["10.0.0.0/16"]
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg-aniket.location
+  resource_group_name = azurerm_resource_group.rg-aniket.name
 }
 
 resource "azurerm_subnet" "subnet_vm" {
   name                 = "subnet-vm"
-  resource_group_name  = azurerm_resource_group.rg.name
+  resource_group_name  = azurerm_resource_group.rg-aniket.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.1.0/24"]
 }
 
 resource "azurerm_subnet" "subnet_appgw" {
   name                 = "subnet-appgw"
-  resource_group_name  = azurerm_resource_group.rg.name
+  resource_group_name  = azurerm_resource_group.rg-aniket.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.2.0/24"]
 }
@@ -46,16 +46,16 @@ resource "azurerm_subnet" "subnet_appgw" {
 # 3️⃣ Public IP for Load Balancer & Application Gateway
 resource "azurerm_public_ip" "lb_pip" {
   name                = "${var.prefix}-lb-pip"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg-aniket.location
+  resource_group_name = azurerm_resource_group.rg-aniket.name
   allocation_method   = "Static"
   sku                 = "Standard"
 }
 
 resource "azurerm_public_ip" "appgw_pip" {
   name                = "${var.prefix}-appgw-pip"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg-aniket.location
+  resource_group_name = azurerm_resource_group.rg-aniket.name
   allocation_method   = "Static"
   sku                 = "Standard"
 }
@@ -63,8 +63,8 @@ resource "azurerm_public_ip" "appgw_pip" {
 # 4️⃣ Load Balancer
 resource "azurerm_lb" "lb" {
   name                = "${var.prefix}-lb"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg-aniket.location
+  resource_group_name = azurerm_resource_group.rg-aniket.name
   sku                 = "Standard"
 
   frontend_ip_configuration {
@@ -82,8 +82,8 @@ resource "azurerm_lb_backend_address_pool" "bepool" {
 # 6️⃣ VM Scale Set (2 instances)
 resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   name                = "${var.prefix}-vmss"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg-aniket.name
+  location            = azurerm_resource_group.rg-aniket.location
   sku                 = "Standard_B1s"
   instances           = 2
   admin_username      = "azureuser"
@@ -127,8 +127,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
 # 7️⃣ Application Gateway
 resource "azurerm_application_gateway" "appgw" {
   name                = "${var.prefix}-appgw"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg-aniket.location
+  resource_group_name = azurerm_resource_group.rg-aniket.name
 
   sku {
     name     = "WAF_v2"
@@ -183,13 +183,13 @@ resource "azurerm_application_gateway" "appgw" {
 # 8️⃣ DNS Zone + Record
 resource "azurerm_dns_zone" "dns_zone" {
   name                = var.dns_zone_name
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = azurerm_resource_group.rg-aniket.name
 }
 
 resource "azurerm_dns_a_record" "dns_record" {
   name                = var.dns_record_name
   zone_name           = azurerm_dns_zone.dns_zone.name
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = azurerm_resource_group.rg-aniket.name
   ttl                 = 300
   records             = [azurerm_public_ip.appgw_pip.ip_address]
 }
